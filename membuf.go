@@ -88,7 +88,7 @@ func (b *Buffer) Write(p []byte) (n int, err error) {
 		logger.Debug0(b.String())
 		bi := getBufferIndex(b.pagei)
 		var pg []byte
-		if bi.pageIndex > 0 || bi.byteIndex > 0 {
+		if b.pagei > 0 {
 			pg = (*b.pages[bi.pageIndex])[bi.byteIndex:]
 			pg = pg[:cap(pg)]
 		}
