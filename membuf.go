@@ -41,7 +41,7 @@ type Buffer struct {
 
 func (b *Buffer) String() string {
 	return fmt.Sprintf(
-		"(*Buffer){pages: [%d]*page, pagei: %d, lasti: %d}",
+		"&membuf.Buffer{pages: [%d]*page, pagei: %d, lasti: %d}",
 		len(b.pages), b.pagei, b.lasti)
 }
 
