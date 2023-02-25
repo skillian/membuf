@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/skillian/errors"
+	"github.com/skillian/logging"
 )
 
 const (
@@ -49,6 +50,9 @@ func (b *Buffer) String() string {
 func (b *Buffer) Close() error { return nil }
 
 func (b *Buffer) logData(name string) {
+	if logger.EffectiveLevel() > logging.DebugLevel {
+		return
+	}
 	p := make([]byte, b.lasti)
 	for i := range b.pages {
 		i *= pageSize
@@ -62,7 +66,7 @@ func (b *Buffer) logData(name string) {
 func (b *Buffer) Read(p []byte) (n int, err error) {
 	defer b.logData("Read")
 	for t := p; len(t) > 0; t = p[n:] {
-		logger.Debug0(b.String())
+		logger.Debug1("%s", b)
 		pg := getBufferIndex(b.pagei).getPage(b)
 		if bytesZero(pg) {
 			logger.Warn0("bytes are zero")
@@ -85,7 +89,7 @@ func (b *Buffer) Write(p []byte) (n int, err error) {
 	defer b.logData("Write")
 	var newPage *page
 	for s := p; len(s) > 0; s = p[n:] {
-		logger.Debug0(b.String())
+		logger.Debug1("%s", b)
 		bi := getBufferIndex(b.pagei)
 		var pg []byte
 		if b.pagei > 0 {
@@ -105,7 +109,7 @@ func (b *Buffer) Write(p []byte) (n int, err error) {
 			b.lasti = b.pagei
 		}
 	}
-	logger.Debug0(b.String())
+	logger.Debug1("%s", b)
 	return
 }
 
